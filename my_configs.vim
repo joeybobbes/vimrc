@@ -1,20 +1,22 @@
-" todos list:
-" todo new line auto tab is annoying
-" todo go to last cursor position when switching buffers (this does not work for my_configs.vim)
-" todo: make ag search more flexible (currently it has predefined search directories)
-
 "------------- DRAFT ----------------
+nmap <F8> :TagbarToggle<CR>
 
-" todo use LL and HH to jump forward backwards sueful for brakcets
-
+compiler pyunit
+set makeprg=python3\ %
 
 "------------- MISC ----------------
 
+" todo use LL and HH to jump forward backwards sueful for brakcets
+set autochdir 
+
+" overriding the comman from basic.vim. this avoids switching to new tab when opening from quickfxi window
+set switchbuf=useopen
+
+" what is this for?
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
-
 set rtp+=~/.vim/bundle/Vundle.vim
 
 " search highlight color(only works for terminal launched vim)
@@ -22,6 +24,17 @@ hi Search cterm=NONE ctermfg=grey ctermbg=blue
 
 " backspace in normal mode
 :nnoremap <expr> <Backspace> col('.') == 1 ? 'kgJ' : 'X'
+
+" line numbers 
+set number
+
+"------------- FONT ----------------
+
+" TODO set font size at startup
+set guifont=Menlo\ Regular:h16 
+ 
+"------------- AUTOCOMMANDS ----------------
+"autocmd BufRead,BufNewFile * start
 
 "------------- PLUGINS ----------------
 
@@ -32,10 +45,25 @@ Plugin 'plasticboy/vim-markdown'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'junegunn/fzf'
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'preservim/tagbar'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
 
 call vundle#end()            " required
 
 filetype plugin on    " required
+
+"------------ SNIPPETS ------------------
+
+" Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+cmap USE :UltiSnipsEdit
 
 "------------- CLIPBOARD ----------------
 
@@ -45,6 +73,9 @@ set clipboard=unnamed
 
 set path+=/Users/joelkropelin/.vim_runtime/
 set path+=/Users/joelkropelin/vimfiles/
+
+" If installed using Homebrew
+set rtp+=/usr/local/opt/fzf
 
 " move quickly through paragraphs
 
@@ -67,6 +98,7 @@ map <S-K> :bprev<CR>
 map <S-X> :bd<CR>
 
 "------------- MARKDOWN ----------------
+
 " vim markdown options
 
 set conceallevel=2
@@ -93,24 +125,24 @@ vnoremap ∆ :m '<-2<CR>gv=gv
 " todo move line or visual up or down with option öä
 " todo move line or visual up or down with option gg/G
 
-" quick movements
-
-inoremap II <Esc>I
-inoremap AA <Esc>A
-inoremap OO <Esc>O
-
-" line modifications 
-
-inoremap CC <Esc>C
-inoremap SS <Esc>S
-inoremap DD <Esc>dd
-inoremap UU <Esc>u
-inoremap WW <C-w>
-inoremap PP <Esc>yypi
-inoremap EE <Esc>daWi 
-
-" line mods in command mode
-cnoremap WW <C-w>
+"" quick movements
+"
+"inoremap II <Esc>I
+"inoremap AA <Esc>A
+"inoremap OO <Esc>O
+"
+"" line modifications 
+"
+"inoremap CC <Esc>C
+"inoremap SS <Esc>S
+"inoremap DD <Esc>dd
+"inoremap UU <Esc>u
+"inoremap WW <C-w>
+"inoremap PP <Esc>yypi
+"inoremap EE <Esc>daWi 
+"
+"" line mods in command mode
+"cnoremap WW <C-w>
 
 "------------- SEARCH ----------------
 
@@ -126,21 +158,12 @@ if executable('ag')
   let g:ctrlp_use_caching = 0
 endif
 
-" bind K to grep word under cursor
+" todo: test. bind K to grep word under cursor
 nnoremap ** :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
-" bind \ (backward slash) to grep shortcut
-"command -nargs=+ -complete=file -bar Ag silent! grep! <args> .vim_runtime/|cwindow|redraw!
-command -nargs=+ -complete=file -bar Ag silent! grep! <args> .vim_runtime/my_configs.vim .vim_runtime/vimrcs/ vimfiles/|cwindow|redraw!
+" configure the grep commmand (to skip the terminal mode and automatically show quickfix list for results)
+command -nargs=+ -complete=file -bar Grep silent! grep! <args> |cwindow|redraw!
 
-" map space space for text search in above specified files 
-nnoremap <space><space> :Ag<SPACE>
-
-" move through quickfix window
-nnoremap Ö :cnext<CR>
-nnoremap Ä :cprev<CR>
-
-" close the quickfix window
-nnoremap Ü :ccl<CR>
-nnoremap ÜÜ :copen<CR>
+" map space space to Grep
+nnoremap <space><space> :Grep<SPACE>
 
